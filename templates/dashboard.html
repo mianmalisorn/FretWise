@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Кабинет</h1>
+<p>Привет, {{ user.username }}.</p>
+
+<div class="card">
+    <h2>Добавить песню</h2>
+    <p class="hint">Заполни карточку песни. Она сохранится в твоей личной библиотеке. Публикация на главную доступна только администратору.</p>
+
+    <form action="/songs/create" method="post" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Название песни" required>
+        <input type="text" name="artist" placeholder="Исполнитель">
+
+        <input type="file" name="cover" accept="image/*">
+        <input type="text" name="spotify_url" placeholder="Ссылка на Spotify">
+
+        <input type="text" name="capo" placeholder="Капо: например, Без капо / 2 лад">
+        <input type="text" name="chords" placeholder="Аккорды песни: Dm, F, C, G">
+
+        <textarea name="strumming" placeholder="Бой"></textarea>
+        <textarea name="picking" placeholder="Перебор"></textarea>
+
+        <textarea class="song-textarea" name="original_text" placeholder="Текст с аккордами. Пробелы сохраняются, поэтому аккорды можно ставить над нужными словами."></textarea>
+
+        {% if is_admin %}
+        <label class="checkbox">
+            <input type="checkbox" name="is_public">
+            Опубликовать на главной
+        </label>
+        {% endif %}
+
+        <button type="submit">Сохранить песню</button>
+    </form>
+</div>
+
+<h2>Избранные песни</h2>
+
+<div class="list">
+    {% for tab in favorite_tabs %}
+    <a class="list-item" href="/tabs/{{ tab.id }}">
+        <strong>{{ tab.artist }} — {{ tab.title }}</strong>
+        <span>Открыть</span>
+    </a>
+    {% else %}
+    <p>Пока нет избранных песен.</p>
+    {% endfor %}
+</div>
+
+<h2>Мои личные песни</h2>
+
+<div class="list">
+    {% for tab in tabs %}
+    <a class="list-item" href="/tabs/{{ tab.id }}">
+        <strong>{{ tab.artist }} — {{ tab.title }}</strong>
+        <span>Открыть</span>
+    </a>
+    {% else %}
+    <p>Пока нет личных песен.</p>
+    {% endfor %}
+</div>
+
+<div class="logout-zone">
+    <a href="/logout" class="logout-button">Выйти из аккаунта</a>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="song-header card">
+    {% if tab.cover_url %}
+    <img class="song-cover" src="{{ tab.cover_url }}" alt="Обложка">
+    {% else %}
+    <div class="song-cover placeholder-cover">♪</div>
+    {% endif %}
+
+    <div class="song-info">
+        <p class="artist-name">{{ tab.artist }}</p>
+        <h1>{{ tab.title }}</h1>
+
+        <div class="song-actions">
+            {% if tab.spotify_url %}
+            <a class="button" href="{{ tab.spotify_url }}" target="_blank">Слушать в Spotify</a>
+            {% endif %}
+
+            <a class="button secondary-button" href="/tabs/{{ tab.id }}/edit">
+                Редактировать
+            </a>
+            <form action="/favorite/{{ tab.id }}" method="post">
+                <button class="heart-button {% if is_favorite %}active{% endif %}" type="submit">
+                    {% if is_favorite %}♥{% else %}♡{% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="song-meta">
+    <div class="card meta-card">
+        <h2>Капо</h2>
+        <p>{{ tab.capo }}</p>
+    </div>
+
+    <div class="card meta-card">
+        <h2>Бой</h2>
+        <p>{{ tab.strumming if tab.strumming else "Не указан" }}</p>
+    </div>
+
+    <div class="card meta-card">
+        <h2>Перебор</h2>
+        <p>{{ tab.picking if tab.picking else "Не указан" }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Аккорды песни</h2>
+
+    <div class="chord-grid">
+        {% for chord in chord_cards %}
+        <div class="chord-card">
+            <h3>{{ chord.name }}</h3>
+
+            {% if chord.has_image %}
+            <img src="{{ chord.image_url }}" alt="{{ chord.name }}">
+            {% else %}
+            <div class="missing-chord">Нет картинки</div>
+            {% endif %}
+        </div>
+        {% else %}
+        <p>Аккорды не указаны.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <h2>Текст и аккорды</h2>
+        <pre class="song-text">{{ tab.original_text }}</pre>
+    </div>
+
+    <div class="card">
+        <h2>Упрощенная версия</h2>
+        <pre class="song-text">{{ tab.simplified_text }}</pre>
+    </div>
+</div>
+{% endblock %}

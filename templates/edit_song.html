@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Редактировать песню</h1>
+<p class="hint">Можно изменить текст, аккорды, обложку, бой, перебор и публикацию.</p>
+
+<div class="card">
+    <form action="/tabs/{{ tab.id }}/edit" method="post">
+        <input type="text" name="title" value="{{ tab.title }}" placeholder="Название песни" required>
+        <input type="text" name="artist" value="{{ tab.artist }}" placeholder="Исполнитель">
+
+        <input type="text" name="cover_url" value="{{ tab.cover_url }}" placeholder="Ссылка на обложку">
+        <input type="text" name="spotify_url" value="{{ tab.spotify_url }}" placeholder="Ссылка на Spotify">
+
+        <input type="text" name="capo" value="{{ tab.capo }}" placeholder="Капо">
+        <input type="text" name="chords" value="{{ tab.chords }}" placeholder="Аккорды песни: Dm, F, C, G">
+
+        <textarea name="strumming" placeholder="Бой">{{ tab.strumming }}</textarea>
+        <textarea name="picking" placeholder="Перебор">{{ tab.picking }}</textarea>
+
+        <textarea class="song-textarea" name="original_text" placeholder="Текст с аккордами">{{ tab.original_text }}</textarea>
+
+        {% if is_admin %}
+        <label class="checkbox">
+            <input type="checkbox" name="is_public" {% if tab.is_public %}checked{% endif %}>
+            Опубликовать на главной
+        </label>
+        {% endif %}
+
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</div>
+
+<div class="danger-zone card">
+    <h2>Удалить песню</h2>
+    <p>Это действие нельзя отменить. Песня удалится из личной библиотеки, главной страницы и избранного.</p>
+
+    <form action="/tabs/{{ tab.id }}/delete" method="post">
+        <button class="delete-button" type="submit">Удалить песню</button>
+    </form>
+</div>
+{% endblock %}

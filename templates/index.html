@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero hero-with-cover">
+    <div>
+        <p class="eyebrow">guitar notes library</p>
+        <h1>FretWise</h1>
+        <p>Минималистичная библиотека песен, аккордов и личных гитарных заметок.</p>
+
+        {% if not user %}
+        <a class="button" href="/register">Начать</a>
+        {% else %}
+        <a class="button" href="/dashboard">Мои песни</a>
+        {% endif %}
+    </div>
+
+    <div class="hero-cover">
+    <img src="/static/logo.png" alt="FretWise logo">
+</div>
+</section>
+
+<h2>Открытая библиотека</h2>
+<p class="hint">Публичные песни. Для полного просмотра нужно войти или зарегистрироваться.</p>
+
+<div class="song-library">
+    {% for tab in public_tabs %}
+    <a class="song-card" href="/tabs/{{ tab.id }}">
+        {% if tab.cover_url %}
+        <img src="{{ tab.cover_url }}" alt="Обложка">
+        {% else %}
+        <div class="song-card-placeholder">♪</div>
+        {% endif %}
+
+        <div>
+            <p>{{ tab.artist }}</p>
+            <h3>{{ tab.title }}</h3>
+            <span>Открыть песню</span>
+        </div>
+    </a>
+    {% else %}
+    <p>Пока нет публичных песен.</p>
+    {% endfor %}
+</div>
+{% endblock %}
